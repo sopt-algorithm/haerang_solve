@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <queue>
+#define MAX 101
+#define endl '\n'
+#define ll long long
+using namespace std;
+
+int main(void){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	
+	int n,m;
+	cin>>n>>m;
+	
+		deque<int> dq;
+		int idx=0;
+		for(int i=1;i<=n;i++){
+			dq.push_back(i);
+		}
+		
+		int cnt=0;
+		for(int i=0;i<m;i++){
+			int x;
+			cin>>x;
+			int idx; // 현재 덱 배열에서 찾는 원소가 있는 위치 찾기  
+			for(int j=0;j<dq.size();j++){
+				if(dq[j]==x){
+					idx=j;
+					break;
+				} 
+			}
+			
+			if(idx<dq.size()-idx){
+				while(true){
+					if(dq.front()==x){
+						dq.pop_front();
+						break;
+					}	
+					dq.push_back(dq.front());
+					dq.pop_front();
+					cnt++;
+				}
+			}else{
+				while(true){
+					if(dq.front()==x){
+						dq.pop_front();
+						break;
+					}
+					dq.push_front(dq.back());
+					dq.pop_back();
+					cnt++;
+				}
+				
+			}
+	
+			
+		}
+	
+		cout<<cnt<<endl;
+	
+	
+	return 0;
+}
+
