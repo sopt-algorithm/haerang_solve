@@ -1,0 +1,23 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <bitset>
+#define MAX 101
+#define endl '\n'
+#define ll long long
+using namespace std;
+
+int main(void){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	
+	int a,b,v;
+	cin>>a>>b>>v;
+	
+	int days=(v-a)/(a-b)+1;
+	if((v-a)%(a-b))days++;
+	cout<<days<<endl;
+	
+	return 0;
+}
+
