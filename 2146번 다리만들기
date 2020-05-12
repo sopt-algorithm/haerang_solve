@@ -1,0 +1,116 @@
+
+![다리만들기](https://www.acmicpc.net/problem/2146)
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <queue>
+#define MAX 101
+#define endl '\n'
+#define ll long long
+using namespace std;
+int n;
+int xpos[]={1,-1,0,0};
+int ypos[]={0,0,1,-1};
+int a[MAX][MAX];
+bool vis[MAX][MAX];
+int answer=MAX*MAX;
+
+
+void dfs(int i,int j,int color){ // 섬에 번호를 붙이는 dfs (2부터 시작, 1은 아직 번호가 안매겨진 섬)
+
+	a[i][j]=color; //번호 칠하기 
+		
+	for(int k=0;k<4;k++){
+		int yy=i+ypos[k];
+		int xx=j+xpos[k];
+		if(yy<0 || xx<0 || yy>=n || xx>=n)continue;
+		
+		if(a[yy][xx]==1){
+			dfs(yy,xx,color);
+			}
+	}
+		
+	
+}
+
+int bfs(int color){
+	queue<pair<int,int>> q; // 해당 번호의 섬을 큐에 집어넣는다 
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			if(a[i][j]==color){
+				q.push({i,j});
+				vis[i][j]=true;
+			}
+		}
+	}
+	
+	int result=0;
+	
+	while(!q.empty()){
+		int qsize=q.size();
+		for(int k=0;k<qsize;k++){ //해당 번호의 섬에서 1개씩 퍼트려나간다 
+			int y=q.front().first;
+			int x=q.front().second;
+			q.pop();
+		
+			for(int i=0;i<4;i++){
+				int yy=y+ypos[i];
+				int xx=x+xpos[i];
+				if(yy<0 || xx<0 || yy>=n || xx>=n)continue;
+				if(vis[yy][xx])continue;
+				
+				if(a[yy][xx] && a[yy][xx]!=color){ // 번호가 다른 섬이라면 도착했으므로 다리개수 반환, 다른 섬에 항상 닿는다.
+					return result;
+				}else if(a[yy][xx]==0){ //바다는 그냥 넣어준다. 
+					q.push({yy,xx});
+					vis[yy][xx]=true;
+				}
+			}
+		}
+		
+		result++;
+		
+	}
+
+}
+
+
+
+
+
+
+int main(void){
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	
+	cin>>n;
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			cin>>a[i][j];
+		}
+	}
+	
+	int cnt=2; // 각 섬을 구별하기 위해 번호 붙이기 
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			if(a[i][j]==1){ //아직 체크되지 않은 섬이 있다면 체크
+				dfs(i,j,cnt);
+				cnt++;
+			}
+		}
+	}
+	
+	for(int i=2;i<cnt;i++){ // <=cnt 했다가 런타임지옥에 빠짐.. cnt++ 연산으로 하나 줄여준다. 
+		memset(vis,0,sizeof(vis)); //초기화 
+		answer=min(answer,bfs(i));
+	}
+	
+
+	cout<<answer<<endl;
+	
+
+
+ return 0;
+}
+
